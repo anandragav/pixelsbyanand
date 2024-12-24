@@ -26,7 +26,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#6B6560] text-white">
+    <div className="min-h-screen bg-background">
       <Navigation />
       <main className="pt-28 pb-16 px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
@@ -46,20 +46,20 @@ const Contact = () => {
                     <Input
                       placeholder="First Name"
                       {...register("firstName", { required: "First name is required" })}
-                      className="bg-transparent border-white/20 text-white placeholder:text-white/50"
+                      className="bg-transparent border-input text-foreground placeholder:text-muted-foreground"
                     />
                     {errors.firstName && (
-                      <p className="text-red-300 text-sm mt-1">{errors.firstName.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.firstName.message}</p>
                     )}
                   </div>
                   <div>
                     <Input
                       placeholder="Last Name"
                       {...register("lastName", { required: "Last name is required" })}
-                      className="bg-transparent border-white/20 text-white placeholder:text-white/50"
+                      className="bg-transparent border-input text-foreground placeholder:text-muted-foreground"
                     />
                     {errors.lastName && (
-                      <p className="text-red-300 text-sm mt-1">{errors.lastName.message}</p>
+                      <p className="text-destructive text-sm mt-1">{errors.lastName.message}</p>
                     )}
                   </div>
                 </div>
@@ -76,17 +76,17 @@ const Contact = () => {
                       message: "Invalid email address"
                     }
                   })}
-                  className="bg-transparent border-white/20 text-white placeholder:text-white/50"
+                  className="bg-transparent border-input text-foreground placeholder:text-muted-foreground"
                 />
                 {errors.email && (
-                  <p className="text-red-300 text-sm mt-1">{errors.email.message}</p>
+                  <p className="text-destructive text-sm mt-1">{errors.email.message}</p>
                 )}
               </div>
 
               <div className="flex items-center space-x-2">
                 <Checkbox 
                   {...register("newsletter")}
-                  className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-[#6B6560]"
+                  className="border-input data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                 />
                 <label className="text-sm">Sign up for news and updates</label>
               </div>
@@ -95,10 +95,10 @@ const Contact = () => {
                 <label className="block text-sm">Subject (required)</label>
                 <Input
                   {...register("subject", { required: "Subject is required" })}
-                  className="bg-transparent border-white/20 text-white placeholder:text-white/50"
+                  className="bg-transparent border-input text-foreground placeholder:text-muted-foreground"
                 />
                 {errors.subject && (
-                  <p className="text-red-300 text-sm mt-1">{errors.subject.message}</p>
+                  <p className="text-destructive text-sm mt-1">{errors.subject.message}</p>
                 )}
               </div>
 
@@ -106,16 +106,16 @@ const Contact = () => {
                 <label className="block text-sm">Message (required)</label>
                 <Textarea
                   {...register("message", { required: "Message is required" })}
-                  className="min-h-[150px] bg-transparent border-white/20 text-white placeholder:text-white/50 resize-none"
+                  className="min-h-[150px] bg-transparent border-input text-foreground placeholder:text-muted-foreground resize-none"
                 />
                 {errors.message && (
-                  <p className="text-red-300 text-sm mt-1">{errors.message.message}</p>
+                  <p className="text-destructive text-sm mt-1">{errors.message.message}</p>
                 )}
               </div>
 
               <Button 
                 type="submit" 
-                className="bg-[#C5BFB9] text-[#6B6560] hover:bg-[#C5BFB9]/90"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 Submit
               </Button>
