@@ -37,7 +37,7 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Construct the public URL
+    // Get the public URL directly
     const publicUrl = `${Deno.env.get('SUPABASE_URL')}/storage/v1/object/public/images/${filePath}`
 
     // Insert into images table
