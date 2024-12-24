@@ -17,7 +17,7 @@ const Navigation = () => {
           <Link to="/contact" className="text-sm hover:text-foreground/70 transition-colors">Contact</Link>
           <div className="flex items-center gap-4">
             <a 
-              href="https://instagram.com" 
+              href="https://www.instagram.com/fotosbyanand/" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hover:text-foreground/70 transition-colors"
@@ -25,7 +25,7 @@ const Navigation = () => {
               <Instagram size={18} />
             </a>
             <a 
-              href="https://facebook.com" 
+              href="https://www.facebook.com/anandavadivelan" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hover:text-foreground/70 transition-colors"
