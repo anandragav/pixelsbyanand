@@ -15,7 +15,7 @@ const GalleryGrid = ({ columns, onImageClick, onLike }: GalleryGridProps) => {
 
   return (
     <div 
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-[2000px] mx-auto px-4"
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-[2400px] mx-auto"
       onContextMenu={handleContextMenu}
     >
       {columns.map((column, columnIndex) => (
