@@ -149,8 +149,17 @@ const Admin = () => {
             accept="image/*"
             onChange={handleFileUpload}
             disabled={uploading}
+            className="hidden"
+            id="file-upload"
           />
           {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
+          <Button 
+            type="button" 
+            onClick={() => document.getElementById('file-upload')?.click()}
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Upload Image"}
+          </Button>
         </div>
       </div>
     </div>
