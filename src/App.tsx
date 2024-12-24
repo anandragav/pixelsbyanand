@@ -28,8 +28,6 @@ const App = () => (
               </AdminCheck>
             } 
           />
-          <Route path="/people" element={<Index />} />
-          <Route path="/things" element={<Index />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </BrowserRouter>

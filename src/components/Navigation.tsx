@@ -11,9 +11,7 @@ const Navigation = () => {
           ANAND VIJAYARAGAVAN
         </Link>
         <div className="flex items-center gap-8">
-          <Link to="/" className="text-sm hover:text-foreground/70 transition-colors">Overview</Link>
-          <Link to="/people" className="text-sm hover:text-foreground/70 transition-colors">People</Link>
-          <Link to="/things" className="text-sm hover:text-foreground/70 transition-colors">Things</Link>
+          <Link to="/" className="text-sm hover:text-foreground/70 transition-colors">Home</Link>
           <Link to="/contact" className="text-sm hover:text-foreground/70 transition-colors">Contact</Link>
           <div className="flex items-center gap-4">
             <a 
