@@ -51,7 +51,6 @@ const Gallery = ({ category }: GalleryProps) => {
           table: 'likes'
         },
         () => {
-          // Refetch photos when likes change
           queryClient.invalidateQueries({ queryKey: ['photos', category] });
         }
       )
@@ -62,7 +61,6 @@ const Gallery = ({ category }: GalleryProps) => {
     };
   }, [queryClient, category]);
 
-  // Handle like
   const handleLike = async (imageId: string) => {
     const { error } = await supabase
       .from('likes')
@@ -76,22 +74,23 @@ const Gallery = ({ category }: GalleryProps) => {
     toast.success('Image liked!');
   };
 
-  // Prevent right click
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
   };
 
-  // Prevent drag
   const handleDragStart = (e: React.DragEvent) => {
     e.preventDefault();
   };
 
   const handleImageClick = (columnIndex: number, imageIndex: number) => {
     const flatIndex = columnIndex + (imageIndex * 4);
+    console.log('Image clicked. Setting index to:', flatIndex);
+    console.log('Total images:', photos.length);
     setSelectedImageIndex(flatIndex);
   };
 
   const handleCloseModal = () => {
+    console.log('Closing modal');
     setSelectedImageIndex(-1);
   };
 
@@ -117,7 +116,8 @@ const Gallery = ({ category }: GalleryProps) => {
             {column.map((photo, imageIndex) => (
               <div 
                 key={photo.id}
-                className="relative overflow-hidden group select-none"
+                className="relative overflow-hidden group select-none cursor-pointer"
+                onClick={() => handleImageClick(columnIndex, imageIndex)}
               >
                 <img
                   src={photo.url}
@@ -126,7 +126,6 @@ const Gallery = ({ category }: GalleryProps) => {
                   loading="lazy"
                   onDragStart={handleDragStart}
                   style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
-                  onClick={() => handleImageClick(columnIndex, imageIndex)}
                 />
                 <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50 px-2 py-1 rounded-full">
                   <button

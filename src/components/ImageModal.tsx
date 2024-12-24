@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -26,15 +26,23 @@ interface ImageModalProps {
 }
 
 const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: ImageModalProps) => {
-  // Prevent right click
+  useEffect(() => {
+    console.log('ImageModal rendered with:', {
+      isOpen,
+      selectedImageIndex,
+      totalImages: images.length
+    });
+  }, [isOpen, selectedImageIndex, images.length]);
+
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
   };
 
-  // Prevent drag
   const handleDragStart = (e: React.DragEvent) => {
     e.preventDefault();
   };
+
+  if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -52,7 +60,7 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
             }}
           >
             <CarouselContent>
-              {images.map((image) => (
+              {images.map((image, index) => (
                 <CarouselItem key={image.id}>
                   <div className="flex items-center justify-center p-4">
                     <div className="relative">
