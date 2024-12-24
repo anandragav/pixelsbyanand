@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from '@/integrations/supabase/types';
+import ImageModal from './ImageModal';
 
 type Image = Database['public']['Tables']['images']['Row'];
 
@@ -10,6 +11,7 @@ interface GalleryProps {
 }
 
 const Gallery = ({ category }: GalleryProps) => {
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(-1);
   const { data: photos = [], isLoading } = useQuery({
     queryKey: ['photos', category],
     queryFn: async () => {
@@ -37,6 +39,15 @@ const Gallery = ({ category }: GalleryProps) => {
     e.preventDefault();
   };
 
+  const handleImageClick = (columnIndex: number, imageIndex: number) => {
+    const flatIndex = columnIndex + (imageIndex * 4);
+    setSelectedImageIndex(flatIndex);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedImageIndex(-1);
+  };
+
   if (isLoading) {
     return <div className="text-center py-8">Loading...</div>;
   }
@@ -49,30 +60,40 @@ const Gallery = ({ category }: GalleryProps) => {
   });
 
   return (
-    <div 
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[2000px] mx-auto px-4"
-      onContextMenu={handleContextMenu}
-    >
-      {columns.map((column, columnIndex) => (
-        <div key={columnIndex} className="flex flex-col gap-4">
-          {column.map((photo) => (
-            <div 
-              key={photo.id}
-              className="relative overflow-hidden group select-none"
-            >
-              <img
-                src={photo.url}
-                alt={photo.alt}
-                className="w-full object-cover transition-transform duration-500 hover:scale-105 pointer-events-none"
-                loading="lazy"
-                onDragStart={handleDragStart}
-                style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
-              />
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
+    <>
+      <div 
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[2000px] mx-auto px-4"
+        onContextMenu={handleContextMenu}
+      >
+        {columns.map((column, columnIndex) => (
+          <div key={columnIndex} className="flex flex-col gap-4">
+            {column.map((photo, imageIndex) => (
+              <div 
+                key={photo.id}
+                className="relative overflow-hidden group select-none cursor-pointer"
+                onClick={() => handleImageClick(columnIndex, imageIndex)}
+              >
+                <img
+                  src={photo.url}
+                  alt={photo.alt}
+                  className="w-full object-cover transition-transform duration-500 hover:scale-105 pointer-events-none"
+                  loading="lazy"
+                  onDragStart={handleDragStart}
+                  style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
+                />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <ImageModal
+        images={photos}
+        selectedImageIndex={selectedImageIndex}
+        isOpen={selectedImageIndex !== -1}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 };
 
