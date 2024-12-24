@@ -27,6 +27,7 @@ const Admin = () => {
       const file = event.target.files?.[0];
       if (!file) return;
 
+      // Validate form fields
       if (!imageData.title || !imageData.category || !imageData.alt || !imageData.aspectRatio) {
         toast({
           title: "Missing fields",
@@ -44,7 +45,10 @@ const Admin = () => {
         .from('images')
         .upload(fileName, file);
 
-      if (storageError) throw storageError;
+      if (storageError) {
+        console.error('Storage error:', storageError);
+        throw storageError;
+      }
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
@@ -62,7 +66,10 @@ const Admin = () => {
           aspect_ratio: imageData.aspectRatio
         });
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
+      }
 
       toast({
         title: "Success",
@@ -76,7 +83,9 @@ const Admin = () => {
         alt: '',
         aspectRatio: ''
       });
-      event.target.value = '';
+      if (event.target) {
+        event.target.value = '';
+      }
 
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -142,13 +151,6 @@ const Admin = () => {
             disabled={uploading}
           />
           {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
-          <Button 
-            type="button" 
-            onClick={() => document.querySelector<HTMLInputElement>('input[type="file"]')?.click()}
-            disabled={uploading}
-          >
-            {uploading ? "Uploading..." : "Upload Image"}
-          </Button>
         </div>
       </div>
     </div>
