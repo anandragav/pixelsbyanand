@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Carousel,
@@ -44,12 +46,18 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
 
   if (!isOpen) return null;
 
+  const currentImage = images[selectedImageIndex];
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
         className="max-w-[95vw] max-h-[90vh] p-0 bg-black/95"
         onContextMenu={handleContextMenu}
       >
+        <DialogTitle className="sr-only">Image Gallery</DialogTitle>
+        <DialogDescription className="sr-only">
+          Browse through the gallery images using left and right arrows
+        </DialogDescription>
         <div className="relative w-full h-full flex items-center justify-center">
           <Carousel 
             className="w-full max-w-[90vw]"
@@ -79,6 +87,7 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
                             onLike(image.id);
                           }}
                           className="text-white hover:text-red-500 transition-colors"
+                          aria-label="Like image"
                         >
                           <Heart size={20} />
                         </button>
