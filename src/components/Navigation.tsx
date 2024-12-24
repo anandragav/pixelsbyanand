@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram } from 'lucide-react';
+import { Instagram, Facebook, Twitter } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const Navigation = () => {
@@ -15,14 +15,32 @@ const Navigation = () => {
           <Link to="/people" className="text-sm hover:text-foreground/70 transition-colors">People</Link>
           <Link to="/things" className="text-sm hover:text-foreground/70 transition-colors">Things</Link>
           <Link to="/contact" className="text-sm hover:text-foreground/70 transition-colors">Contact</Link>
-          <a 
-            href="https://instagram.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="hover:text-foreground/70 transition-colors"
-          >
-            <Instagram size={20} />
-          </a>
+          <div className="flex items-center gap-4">
+            <a 
+              href="https://instagram.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-foreground/70 transition-colors"
+            >
+              <Instagram size={18} />
+            </a>
+            <a 
+              href="https://facebook.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-foreground/70 transition-colors"
+            >
+              <Facebook size={18} />
+            </a>
+            <a 
+              href="https://twitter.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-foreground/70 transition-colors"
+            >
+              <Twitter size={18} />
+            </a>
+          </div>
           <ThemeToggle />
         </div>
       </div>
