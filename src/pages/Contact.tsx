@@ -46,7 +46,7 @@ const Contact = () => {
                     <Input
                       placeholder="First Name"
                       {...register("firstName", { required: "First name is required" })}
-                      className={`bg-transparent border-white/20 ${errors.firstName ? "border-red-500" : ""}`}
+                      className="bg-transparent border-white/20 text-white placeholder:text-white/50"
                     />
                     {errors.firstName && (
                       <p className="text-red-300 text-sm mt-1">{errors.firstName.message}</p>
@@ -56,7 +56,7 @@ const Contact = () => {
                     <Input
                       placeholder="Last Name"
                       {...register("lastName", { required: "Last name is required" })}
-                      className={`bg-transparent border-white/20 ${errors.lastName ? "border-red-500" : ""}`}
+                      className="bg-transparent border-white/20 text-white placeholder:text-white/50"
                     />
                     {errors.lastName && (
                       <p className="text-red-300 text-sm mt-1">{errors.lastName.message}</p>
@@ -76,7 +76,7 @@ const Contact = () => {
                       message: "Invalid email address"
                     }
                   })}
-                  className={`bg-transparent border-white/20 ${errors.email ? "border-red-500" : ""}`}
+                  className="bg-transparent border-white/20 text-white placeholder:text-white/50"
                 />
                 {errors.email && (
                   <p className="text-red-300 text-sm mt-1">{errors.email.message}</p>
@@ -95,7 +95,7 @@ const Contact = () => {
                 <label className="block text-sm">Subject (required)</label>
                 <Input
                   {...register("subject", { required: "Subject is required" })}
-                  className={`bg-transparent border-white/20 ${errors.subject ? "border-red-500" : ""}`}
+                  className="bg-transparent border-white/20 text-white placeholder:text-white/50"
                 />
                 {errors.subject && (
                   <p className="text-red-300 text-sm mt-1">{errors.subject.message}</p>
@@ -106,7 +106,7 @@ const Contact = () => {
                 <label className="block text-sm">Message (required)</label>
                 <Textarea
                   {...register("message", { required: "Message is required" })}
-                  className={`min-h-[150px] bg-transparent border-white/20 ${errors.message ? "border-red-500" : ""}`}
+                  className="min-h-[150px] bg-transparent border-white/20 text-white placeholder:text-white/50 resize-none"
                 />
                 {errors.message && (
                   <p className="text-red-300 text-sm mt-1">{errors.message.message}</p>
