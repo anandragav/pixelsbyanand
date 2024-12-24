@@ -142,6 +142,13 @@ const Admin = () => {
             disabled={uploading}
           />
           {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
+          <Button 
+            type="button" 
+            onClick={() => document.querySelector<HTMLInputElement>('input[type="file"]')?.click()}
+            disabled={uploading}
+          >
+            {uploading ? "Uploading..." : "Upload Image"}
+          </Button>
         </div>
       </div>
     </div>
