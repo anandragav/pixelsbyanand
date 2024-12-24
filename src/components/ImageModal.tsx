@@ -24,7 +24,7 @@ interface ImageModalProps {
 const ImageModal = ({ images, selectedImageIndex, isOpen, onClose }: ImageModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[90vw] max-h-[90vh] p-0">
+      <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 bg-black">
         <Carousel 
           className="w-full" 
           opts={{
