@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
+import Contact from "./pages/Contact";
 import AdminCheck from "./components/AdminCheck";
 
 const queryClient = new QueryClient();
@@ -29,7 +30,7 @@ const App = () => (
           />
           <Route path="/people" element={<Index />} />
           <Route path="/things" element={<Index />} />
-          <Route path="/contact" element={<Index />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
