@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Facebook, Twitter } from 'lucide-react';
+import { Instagram, Facebook, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const Navigation = () => {
@@ -33,12 +33,12 @@ const Navigation = () => {
               <Facebook size={18} />
             </a>
             <a 
-              href="https://twitter.com" 
+              href="https://x.com/anandVragav" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hover:text-foreground/70 transition-colors"
             >
-              <Twitter size={18} />
+              <X size={18} />
             </a>
           </div>
           <ThemeToggle />
