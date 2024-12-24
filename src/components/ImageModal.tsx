@@ -44,9 +44,7 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
       >
         <Carousel 
           className="w-full select-none" 
-          opts={{
-            startIndex: selectedImageIndex
-          }}
+          defaultIndex={selectedImageIndex}
         >
           <CarouselContent>
             {images.map((image) => (
