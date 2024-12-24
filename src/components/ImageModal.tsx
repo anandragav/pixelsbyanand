@@ -46,12 +46,10 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
 
   if (!isOpen) return null;
 
-  const currentImage = images[selectedImageIndex];
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="max-w-[95vw] max-h-[90vh] p-0 bg-black/95"
+        className="max-w-[95vw] max-h-[90vh] p-0 bg-background/95 border-none"
         onContextMenu={handleContextMenu}
       >
         <DialogTitle className="sr-only">Image Gallery</DialogTitle>
@@ -80,26 +78,26 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
                         onDragStart={handleDragStart}
                         style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
                       />
-                      <div className="absolute bottom-4 right-4 flex items-center gap-1 bg-black/50 px-3 py-2 rounded-full">
+                      <div className="absolute bottom-4 right-4 flex items-center gap-1 bg-background/50 dark:bg-foreground/10 px-3 py-2 rounded-full">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             onLike(image.id);
                           }}
-                          className="text-white hover:text-red-500 transition-colors"
+                          className="text-foreground hover:text-red-500 transition-colors"
                           aria-label="Like image"
                         >
                           <Heart size={20} />
                         </button>
-                        <span className="text-white">{image.likes_count || 0}</span>
+                        <span className="text-foreground">{image.likes_count || 0}</span>
                       </div>
                     </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
-            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
+            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/50 dark:bg-foreground/10 border-none hover:bg-background/70 dark:hover:bg-foreground/20" />
+            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/50 dark:bg-foreground/10 border-none hover:bg-background/70 dark:hover:bg-foreground/20" />
           </Carousel>
         </div>
       </DialogContent>

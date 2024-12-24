@@ -95,7 +95,7 @@ const Gallery = ({ category }: GalleryProps) => {
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading...</div>;
+    return <div className="text-center py-8 text-foreground">Loading...</div>;
   }
 
   // Split photos into 4 columns
@@ -127,17 +127,17 @@ const Gallery = ({ category }: GalleryProps) => {
                   onDragStart={handleDragStart}
                   style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
                 />
-                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50 px-2 py-1 rounded-full">
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-background/50 dark:bg-foreground/10 px-2 py-1 rounded-full">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleLike(photo.id);
                     }}
-                    className="text-white hover:text-red-500 transition-colors"
+                    className="text-foreground hover:text-red-500 transition-colors"
                   >
                     <Heart size={16} />
                   </button>
-                  <span className="text-white text-sm">{photo.likes_count || 0}</span>
+                  <span className="text-foreground text-sm">{photo.likes_count || 0}</span>
                 </div>
               </div>
             ))}
