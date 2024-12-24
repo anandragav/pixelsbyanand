@@ -46,14 +46,16 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
           className="w-full select-none" 
           opts={{
             startIndex: selectedImageIndex,
-            align: "start",
-            loop: true
+            align: "center",
+            containScroll: false,
+            loop: true,
+            dragFree: false
           }}
         >
           <CarouselContent>
             {images.map((image) => (
-              <CarouselItem key={image.id}>
-                <div className="flex items-center justify-center p-6 relative">
+              <CarouselItem key={image.id} className="flex items-center justify-center">
+                <div className="flex items-center justify-center p-6 relative w-full h-full">
                   <img
                     src={image.url}
                     alt={image.alt}
