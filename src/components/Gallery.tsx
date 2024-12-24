@@ -1,17 +1,40 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from "@/integrations/supabase/client";
 
 interface Photo {
   id: string;
   url: string;
   alt: string;
-  aspectRatio: 'square' | 'portrait' | 'landscape';
+  aspect_ratio: 'square' | 'portrait' | 'landscape';
 }
 
 interface GalleryProps {
-  photos: Photo[];
+  category?: string;
 }
 
-const Gallery = ({ photos }: GalleryProps) => {
+const Gallery = ({ category }: GalleryProps) => {
+  const { data: photos = [], isLoading } = useQuery({
+    queryKey: ['photos', category],
+    queryFn: async () => {
+      let query = supabase
+        .from('images')
+        .select('*');
+      
+      if (category) {
+        query = query.eq('category', category);
+      }
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      return data as Photo[];
+    }
+  });
+
+  if (isLoading) {
+    return <div className="text-center py-8">Loading...</div>;
+  }
+
   // Split photos into 4 columns
   const columns = [[], [], [], []].map(() => [] as Photo[]);
   
