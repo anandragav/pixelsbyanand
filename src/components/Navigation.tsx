@@ -8,7 +8,7 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-sm z-50 px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 py-6 border-b shadow-sm">
       <div className="max-w-[2400px] mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-light tracking-wider text-foreground">
-          PHOTOGRAPHER NAME
+          ANAND VIJAYARAGAVAN
         </Link>
         <div className="flex items-center gap-8">
           <Link to="/" className="text-sm hover:text-foreground/70 transition-colors">Overview</Link>
