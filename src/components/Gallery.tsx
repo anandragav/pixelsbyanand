@@ -27,6 +27,16 @@ const Gallery = ({ category }: GalleryProps) => {
     }
   });
 
+  // Prevent right click
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
+  // Prevent drag
+  const handleDragStart = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
   if (isLoading) {
     return <div className="text-center py-8">Loading...</div>;
   }
@@ -39,19 +49,24 @@ const Gallery = ({ category }: GalleryProps) => {
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[2000px] mx-auto px-4">
+    <div 
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[2000px] mx-auto px-4"
+      onContextMenu={handleContextMenu}
+    >
       {columns.map((column, columnIndex) => (
         <div key={columnIndex} className="flex flex-col gap-4">
           {column.map((photo) => (
             <div 
               key={photo.id}
-              className="relative overflow-hidden group"
+              className="relative overflow-hidden group select-none"
             >
               <img
                 src={photo.url}
                 alt={photo.alt}
-                className="w-full object-cover transition-transform duration-500 hover:scale-105"
+                className="w-full object-cover transition-transform duration-500 hover:scale-105 pointer-events-none"
                 loading="lazy"
+                onDragStart={handleDragStart}
+                style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
               />
             </div>
           ))}
