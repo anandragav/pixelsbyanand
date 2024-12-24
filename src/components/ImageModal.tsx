@@ -39,32 +39,30 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent 
-        className="max-w-[90vw] max-h-[90vh] p-0 bg-black"
+        className="max-w-[95vw] h-[90vh] p-6 bg-background"
         onContextMenu={handleContextMenu}
       >
         <Carousel 
-          className="w-full select-none" 
+          className="w-full h-full"
           opts={{
             startIndex: selectedImageIndex,
             align: "center",
-            containScroll: false,
             loop: true,
-            dragFree: false
           }}
         >
-          <CarouselContent>
+          <CarouselContent className="h-full">
             {images.map((image) => (
-              <CarouselItem key={image.id} className="flex items-center justify-center">
-                <div className="flex items-center justify-center p-6 relative w-full h-full">
+              <CarouselItem key={image.id} className="h-full flex items-center justify-center">
+                <div className="relative w-full h-full flex items-center justify-center">
                   <img
                     src={image.url}
                     alt={image.alt}
-                    className="max-h-[80vh] object-contain pointer-events-none"
+                    className="max-h-[75vh] w-auto object-contain"
                     loading="lazy"
                     onDragStart={handleDragStart}
                     style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
                   />
-                  <div className="absolute bottom-8 right-8 flex items-center gap-1 bg-black/50 px-3 py-2 rounded-full">
+                  <div className="absolute bottom-4 right-4 flex items-center gap-1 bg-black/50 px-3 py-2 rounded-full">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -80,8 +78,8 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-4" />
-          <CarouselNext className="right-4" />
+          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2" />
+          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2" />
         </Carousel>
       </DialogContent>
     </Dialog>
