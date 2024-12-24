@@ -6,10 +6,38 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export type Database = {
+export interface Database {
   public: {
     Tables: {
-      [_ in never]: never
+      images: {
+        Row: {
+          id: string
+          created_at: string
+          title: string
+          category: string
+          url: string
+          alt: string
+          aspect_ratio: 'square' | 'portrait' | 'landscape'
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          title: string
+          category: string
+          url: string
+          alt: string
+          aspect_ratio: 'square' | 'portrait' | 'landscape'
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          title?: string
+          category?: string
+          url?: string
+          alt?: string
+          aspect_ratio?: 'square' | 'portrait' | 'landscape'
+        }
+      }
     }
     Views: {
       [_ in never]: never

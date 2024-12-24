@@ -1,13 +1,9 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from '@/integrations/supabase/types';
 
-interface Photo {
-  id: string;
-  url: string;
-  alt: string;
-  aspect_ratio: 'square' | 'portrait' | 'landscape';
-}
+type Image = Database['public']['Tables']['images']['Row'];
 
 interface GalleryProps {
   category?: string;
@@ -27,7 +23,7 @@ const Gallery = ({ category }: GalleryProps) => {
       
       const { data, error } = await query;
       if (error) throw error;
-      return data as Photo[];
+      return data as Image[];
     }
   });
 
@@ -36,7 +32,7 @@ const Gallery = ({ category }: GalleryProps) => {
   }
 
   // Split photos into 4 columns
-  const columns = [[], [], [], []].map(() => [] as Photo[]);
+  const columns = [[], [], [], []].map(() => [] as Image[]);
   
   photos.forEach((photo, index) => {
     columns[index % 4].push(photo);
