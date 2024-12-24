@@ -5,17 +5,22 @@ import ThemeToggle from './ThemeToggle';
 
 const Navigation = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-sm z-50 px-6 py-4 border-b shadow-md">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
+    <nav className="fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-sm z-50 px-8 md:px-16 lg:px-24 xl:px-32 2xl:px-48 py-6 border-b shadow-sm">
+      <div className="max-w-[2400px] mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-light tracking-wider text-foreground">
           PHOTOGRAPHER NAME
         </Link>
-        <div className="flex items-center space-x-8">
-          <Link to="/" className="text-sm hover:underline text-foreground">Overview</Link>
-          <Link to="/people" className="text-sm hover:underline text-foreground">People</Link>
-          <Link to="/things" className="text-sm hover:underline text-foreground">Things</Link>
-          <Link to="/contact" className="text-sm hover:underline text-foreground">Contact</Link>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 text-foreground">
+        <div className="flex items-center gap-8">
+          <Link to="/" className="text-sm hover:text-foreground/70 transition-colors">Overview</Link>
+          <Link to="/people" className="text-sm hover:text-foreground/70 transition-colors">People</Link>
+          <Link to="/things" className="text-sm hover:text-foreground/70 transition-colors">Things</Link>
+          <Link to="/contact" className="text-sm hover:text-foreground/70 transition-colors">Contact</Link>
+          <a 
+            href="https://instagram.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="hover:text-foreground/70 transition-colors"
+          >
             <Instagram size={20} />
           </a>
           <ThemeToggle />
