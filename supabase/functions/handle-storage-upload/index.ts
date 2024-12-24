@@ -55,7 +55,7 @@ serve(async (req) => {
     const image = await Image.decode(new Uint8Array(arrayBuffer))
 
     // Add watermark text
-    const watermarkText = '© My Gallery'
+    const watermarkText = '© Anand Vijayaragavan'
     const fontSize = Math.min(image.width, image.height) * 0.05 // 5% of the smallest dimension
     
     // Add semi-transparent white text in the bottom right corner
