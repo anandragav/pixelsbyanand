@@ -5,7 +5,7 @@ import ThemeToggle from './ThemeToggle';
 
 const Navigation = () => {
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-sm z-50 px-6 py-4 border-b">
+    <nav className="fixed top-0 left-0 right-0 bg-background/90 backdrop-blur-sm z-50 px-6 py-4 border-b shadow-md">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-light tracking-wider text-foreground">
           PHOTOGRAPHER NAME

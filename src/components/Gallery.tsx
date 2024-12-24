@@ -83,7 +83,7 @@ const Gallery = ({ category }: GalleryProps) => {
   };
 
   const handleImageClick = (columnIndex: number, imageIndex: number) => {
-    const flatIndex = columnIndex + (imageIndex * 4);
+    const flatIndex = columnIndex + (imageIndex * 5);
     console.log('Image clicked. Setting index to:', flatIndex);
     console.log('Total images:', photos.length);
     setSelectedImageIndex(flatIndex);
@@ -98,17 +98,17 @@ const Gallery = ({ category }: GalleryProps) => {
     return <div className="text-center py-8 text-foreground">Loading...</div>;
   }
 
-  // Split photos into 4 columns
-  const columns = [[], [], [], []].map(() => [] as Image[]);
+  // Split photos into 5 columns instead of 4
+  const columns = [[], [], [], [], []].map(() => [] as Image[]);
   
   photos.forEach((photo, index) => {
-    columns[index % 4].push(photo);
+    columns[index % 5].push(photo);
   });
 
   return (
     <>
       <div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-[2000px] mx-auto px-4"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-[2000px] mx-auto px-4"
         onContextMenu={handleContextMenu}
       >
         {columns.map((column, columnIndex) => (
