@@ -34,6 +34,7 @@ export type Database = {
           category: string
           created_at: string
           id: string
+          owner_id: string | null
           title: string
           url: string
         }
@@ -43,6 +44,7 @@ export type Database = {
           category: string
           created_at?: string
           id?: string
+          owner_id?: string | null
           title: string
           url: string
         }
@@ -52,6 +54,7 @@ export type Database = {
           category?: string
           created_at?: string
           id?: string
+          owner_id?: string | null
           title?: string
           url?: string
         }

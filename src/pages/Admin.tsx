@@ -44,6 +44,18 @@ const Admin = () => {
         return;
       }
 
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "Please sign in to upload images",
+          variant: "destructive"
+        });
+        navigate('/auth');
+        return;
+      }
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${imageData.category}/${crypto.randomUUID()}.${fileExt}`;
       
@@ -66,7 +78,8 @@ const Admin = () => {
           category: imageData.category,
           url: publicUrl,
           alt: imageData.alt,
-          aspect_ratio: imageData.aspectRatio
+          aspect_ratio: imageData.aspectRatio,
+          owner_id: user.id // Associate the image with the current user
         });
 
       if (dbError) {
