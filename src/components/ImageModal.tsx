@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Heart } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 
 type Image = Database['public']['Tables']['images']['Row'];
@@ -19,9 +20,10 @@ interface ImageModalProps {
   selectedImageIndex: number;
   isOpen: boolean;
   onClose: () => void;
+  onLike: (imageId: string) => void;
 }
 
-const ImageModal = ({ images, selectedImageIndex, isOpen, onClose }: ImageModalProps) => {
+const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: ImageModalProps) => {
   // Prevent right click
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,7 +49,7 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose }: ImageModalP
           <CarouselContent>
             {images.map((image) => (
               <CarouselItem key={image.id}>
-                <div className="flex items-center justify-center p-6">
+                <div className="flex items-center justify-center p-6 relative">
                   <img
                     src={image.url}
                     alt={image.alt}
@@ -56,6 +58,18 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose }: ImageModalP
                     onDragStart={handleDragStart}
                     style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
                   />
+                  <div className="absolute bottom-8 right-8 flex items-center gap-1 bg-black/50 px-3 py-2 rounded-full">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onLike(image.id);
+                      }}
+                      className="text-white hover:text-red-500 transition-colors"
+                    >
+                      <Heart size={20} />
+                    </button>
+                    <span className="text-white">{image.likes_count}</span>
+                  </div>
                 </div>
               </CarouselItem>
             ))}

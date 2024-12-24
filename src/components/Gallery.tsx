@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from '@/integrations/supabase/types';
 import ImageModal from './ImageModal';
+import { Heart } from 'lucide-react';
+import { toast } from 'sonner';
 
 type Image = Database['public']['Tables']['images']['Row'];
 
@@ -12,12 +14,14 @@ interface GalleryProps {
 
 const Gallery = ({ category }: GalleryProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(-1);
+
+  // Fetch images
   const { data: photos = [], isLoading } = useQuery({
     queryKey: ['photos', category],
     queryFn: async () => {
       let query = supabase
         .from('images')
-        .select('*');
+        .select('*, likes(count)');
       
       if (category) {
         query = query.eq('category', category);
@@ -25,9 +29,26 @@ const Gallery = ({ category }: GalleryProps) => {
       
       const { data, error } = await query;
       if (error) throw error;
-      return data as Image[];
+      return data.map(photo => ({
+        ...photo,
+        likes_count: photo.likes?.[0]?.count || 0
+      }));
     }
   });
+
+  // Handle like
+  const handleLike = async (imageId: string) => {
+    const { error } = await supabase
+      .from('likes')
+      .insert({ image_id: imageId });
+
+    if (error) {
+      toast.error('Failed to like image');
+      return;
+    }
+
+    toast.success('Image liked!');
+  };
 
   // Prevent right click
   const handleContextMenu = (e: React.MouseEvent) => {
@@ -70,8 +91,7 @@ const Gallery = ({ category }: GalleryProps) => {
             {column.map((photo, imageIndex) => (
               <div 
                 key={photo.id}
-                className="relative overflow-hidden group select-none cursor-pointer"
-                onClick={() => handleImageClick(columnIndex, imageIndex)}
+                className="relative overflow-hidden group select-none"
               >
                 <img
                   src={photo.url}
@@ -80,7 +100,20 @@ const Gallery = ({ category }: GalleryProps) => {
                   loading="lazy"
                   onDragStart={handleDragStart}
                   style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
+                  onClick={() => handleImageClick(columnIndex, imageIndex)}
                 />
+                <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50 px-2 py-1 rounded-full">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLike(photo.id);
+                    }}
+                    className="text-white hover:text-red-500 transition-colors"
+                  >
+                    <Heart size={16} />
+                  </button>
+                  <span className="text-white text-sm">{photo.likes_count}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -92,6 +125,7 @@ const Gallery = ({ category }: GalleryProps) => {
         selectedImageIndex={selectedImageIndex}
         isOpen={selectedImageIndex !== -1}
         onClose={handleCloseModal}
+        onLike={handleLike}
       />
     </>
   );

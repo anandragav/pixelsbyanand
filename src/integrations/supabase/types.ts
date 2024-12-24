@@ -60,6 +60,32 @@ export type Database = {
         }
         Relationships: []
       }
+      likes: {
+        Row: {
+          created_at: string
+          id: string
+          image_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_image_id_fkey"
+            columns: ["image_id"]
+            isOneToOne: false
+            referencedRelation: "images"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
