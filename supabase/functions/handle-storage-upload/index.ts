@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
+import { Image } from 'https://deno.land/x/imagescript@1.2.15/mod.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,30 +38,75 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Get the public URL directly
-    const publicUrl = `${Deno.env.get('SUPABASE_URL')}/storage/v1/object/public/images/${filePath}`
+    // Download the original image
+    const { data: fileData, error: downloadError } = await supabase
+      .storage
+      .from('images')
+      .download(filePath)
+
+    if (downloadError) {
+      throw downloadError
+    }
+
+    // Convert the file to an ArrayBuffer
+    const arrayBuffer = await fileData.arrayBuffer()
+
+    // Load the image using ImageScript
+    const image = await Image.decode(new Uint8Array(arrayBuffer))
+
+    // Add watermark text
+    const watermarkText = '© My Gallery'
+    const fontSize = Math.min(image.width, image.height) * 0.05 // 5% of the smallest dimension
+    
+    // Add semi-transparent white text in the bottom right corner
+    image.drawText(
+      watermarkText,
+      Math.floor(fontSize),
+      {
+        x: image.width - (watermarkText.length * fontSize * 0.6),
+        y: image.height - (fontSize * 1.5),
+        color: Image.rgbaToColor(255, 255, 255, 0.7)
+      }
+    )
+
+    // Encode the image back to PNG
+    const processedImageData = await image.encode()
+
+    // Upload the watermarked image back to storage
+    const { error: uploadError } = await supabase
+      .storage
+      .from('images')
+      .update(filePath, processedImageData, {
+        contentType: 'image/png',
+        upsert: true
+      })
+
+    if (uploadError) {
+      throw uploadError
+    }
+
+    // Get the public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('images')
+      .getPublicUrl(filePath)
 
     // Insert into images table
-    const { data, error } = await supabase
+    const { error: dbError } = await supabase
       .from('images')
       .insert({
         title: title,
         category: category,
         url: publicUrl,
         alt: title,
-        aspect_ratio: 'landscape' // Default to landscape, you might want to detect this
+        aspect_ratio: 'landscape', // Default to landscape, you might want to detect this
       })
-      .select()
 
-    if (error) {
-      console.error('Error inserting image:', error)
-      throw error
+    if (dbError) {
+      throw dbError
     }
 
-    console.log('Successfully added image to database:', data)
-
     return new Response(
-      JSON.stringify({ message: 'Successfully processed new image' }),
+      JSON.stringify({ message: 'Successfully processed image with watermark' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     )
 
