@@ -6,7 +6,9 @@ import ImageModal from './ImageModal';
 import { Heart } from 'lucide-react';
 import { toast } from 'sonner';
 
-type Image = Database['public']['Tables']['images']['Row'];
+type Image = Database['public']['Tables']['images']['Row'] & {
+  likes_count?: number;
+};
 
 interface GalleryProps {
   category?: string;
@@ -112,7 +114,7 @@ const Gallery = ({ category }: GalleryProps) => {
                   >
                     <Heart size={16} />
                   </button>
-                  <span className="text-white text-sm">{photo.likes_count}</span>
+                  <span className="text-white text-sm">{photo.likes_count || 0}</span>
                 </div>
               </div>
             ))}

@@ -13,7 +13,9 @@ import {
 import { Heart } from 'lucide-react';
 import type { Database } from '@/integrations/supabase/types';
 
-type Image = Database['public']['Tables']['images']['Row'];
+type Image = Database['public']['Tables']['images']['Row'] & {
+  likes_count?: number;
+};
 
 interface ImageModalProps {
   images: Image[];
@@ -68,7 +70,7 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
                     >
                       <Heart size={20} />
                     </button>
-                    <span className="text-white">{image.likes_count}</span>
+                    <span className="text-white">{image.likes_count || 0}</span>
                   </div>
                 </div>
               </CarouselItem>
