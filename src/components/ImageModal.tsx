@@ -22,11 +22,24 @@ interface ImageModalProps {
 }
 
 const ImageModal = ({ images, selectedImageIndex, isOpen, onClose }: ImageModalProps) => {
+  // Prevent right click
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
+  // Prevent drag
+  const handleDragStart = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[90vw] max-h-[90vh] p-0 bg-black">
+      <DialogContent 
+        className="max-w-[90vw] max-h-[90vh] p-0 bg-black"
+        onContextMenu={handleContextMenu}
+      >
         <Carousel 
-          className="w-full" 
+          className="w-full select-none" 
           opts={{
             startIndex: selectedImageIndex
           }}
@@ -38,8 +51,10 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose }: ImageModalP
                   <img
                     src={image.url}
                     alt={image.alt}
-                    className="max-h-[80vh] object-contain"
+                    className="max-h-[80vh] object-contain pointer-events-none"
                     loading="lazy"
+                    onDragStart={handleDragStart}
+                    style={{ WebkitUserSelect: 'none', userSelect: 'none' }}
                   />
                 </div>
               </CarouselItem>
