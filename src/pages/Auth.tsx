@@ -41,6 +41,8 @@ const AuthPage = () => {
                 },
               },
             }}
+            providers={["google"]}
+            view="sign_in"
           />
         </div>
       </div>
