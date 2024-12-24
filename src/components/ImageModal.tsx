@@ -25,7 +25,12 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose }: ImageModalP
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[90vw] max-h-[90vh] p-0">
-        <Carousel className="w-full" defaultSlide={selectedImageIndex}>
+        <Carousel 
+          className="w-full" 
+          opts={{
+            startIndex: selectedImageIndex
+          }}
+        >
           <CarouselContent>
             {images.map((image) => (
               <CarouselItem key={image.id}>
