@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
-import type { Image } from './types';
+import type { Image } from '@/components/Gallery/types';
 
 export const useImages = (category?: string) => {
   return useQuery({

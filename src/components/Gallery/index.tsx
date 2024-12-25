@@ -4,6 +4,7 @@ import GalleryGrid from './GalleryGrid';
 import { useImages } from '@/hooks/useImages';
 import { useRealtimeLikes } from '@/hooks/useRealtimeLikes';
 import { handleImageLike } from '@/utils/likeUtils';
+import type { Image } from './types';
 
 interface GalleryProps {
   category?: string;
