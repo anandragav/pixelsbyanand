@@ -1,5 +1,8 @@
 import type { Database } from '@/integrations/supabase/types';
 
-export type Image = Database['public']['Tables']['images']['Row'] & {
+export type BaseImage = Database['public']['Tables']['images']['Row'];
+
+export interface Image extends BaseImage {
   likes_count?: number;
-};
+  likes?: Array<{ count: number }>;
+}
