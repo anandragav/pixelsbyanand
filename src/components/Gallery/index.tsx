@@ -27,7 +27,7 @@ const Gallery = ({ category }: GalleryProps) => {
         query = query.eq('category', category);
       }
       
-      const { data, error, count } = await query;
+      const { data, error } = await query;
       
       if (error) {
         console.error('Error fetching images:', error);
