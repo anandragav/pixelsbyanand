@@ -17,16 +17,17 @@ const Gallery = ({ category }: GalleryProps) => {
   const { data: photos = [], isLoading, error } = useQuery({
     queryKey: ['photos', category],
     queryFn: async () => {
-      console.log('Fetching images...');
+      console.log('Fetching images with category:', category);
       let query = supabase
         .from('images')
-        .select('*, likes(count)');
+        .select('*, likes(count)')
+        .order('created_at', { ascending: false });  // Order by newest first
       
       if (category) {
         query = query.eq('category', category);
       }
       
-      const { data, error } = await query;
+      const { data, error, count } = await query;
       
       if (error) {
         console.error('Error fetching images:', error);
@@ -34,6 +35,7 @@ const Gallery = ({ category }: GalleryProps) => {
         throw error;
       }
 
+      console.log('Total images fetched:', data?.length);
       console.log('Fetched images:', data);
       return data.map(photo => ({
         ...photo,
