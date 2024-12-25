@@ -14,9 +14,10 @@ const Gallery = ({ category }: GalleryProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(-1);
   const queryClient = useQueryClient();
 
-  const { data: photos = [], isLoading } = useQuery({
+  const { data: photos = [], isLoading, error } = useQuery({
     queryKey: ['photos', category],
     queryFn: async () => {
+      console.log('Fetching images...');
       let query = supabase
         .from('images')
         .select('*, likes(count)');
@@ -26,7 +27,14 @@ const Gallery = ({ category }: GalleryProps) => {
       }
       
       const { data, error } = await query;
-      if (error) throw error;
+      
+      if (error) {
+        console.error('Error fetching images:', error);
+        toast.error('Failed to load images');
+        throw error;
+      }
+
+      console.log('Fetched images:', data);
       return data.map(photo => ({
         ...photo,
         likes_count: photo.likes?.[0]?.count || 0
@@ -79,6 +87,10 @@ const Gallery = ({ category }: GalleryProps) => {
     console.log('Closing modal');
     setSelectedImageIndex(-1);
   };
+
+  if (error) {
+    return <div className="text-center py-8 text-foreground">Error loading images. Please try again.</div>;
+  }
 
   if (isLoading) {
     return <div className="text-center py-8 text-foreground">Loading...</div>;
