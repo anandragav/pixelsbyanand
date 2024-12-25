@@ -18,9 +18,10 @@ const Gallery = ({ category }: GalleryProps) => {
   useRealtimeLikes(category);
 
   const handleImageClick = useCallback((columnIndex: number, imageIndex: number) => {
-    const flatIndex = columnIndex + (imageIndex * 5);
-    setSelectedImageIndex(flatIndex);
-  }, []);
+    // Calculate the actual index in the photos array
+    const actualIndex = Math.floor(photos.length / 5) * columnIndex + imageIndex;
+    setSelectedImageIndex(actualIndex);
+  }, [photos.length]);
 
   const handleCloseModal = useCallback(() => {
     setSelectedImageIndex(-1);
@@ -38,10 +39,15 @@ const Gallery = ({ category }: GalleryProps) => {
     return <div className="text-center py-8 text-foreground">Loading...</div>;
   }
 
-  // Split photos into 5 columns
-  const columns = [[], [], [], [], []].map(() => [] as Image[]);
+  // Split photos into 5 columns more evenly
+  const columns: Image[][] = [[], [], [], [], []];
+  const itemsPerColumn = Math.ceil(photos.length / 5);
+  
   photos.forEach((photo, index) => {
-    columns[index % 5].push(photo);
+    const columnIndex = Math.floor(index / itemsPerColumn);
+    if (columnIndex < 5) {
+      columns[columnIndex].push(photo);
+    }
   });
 
   return (
