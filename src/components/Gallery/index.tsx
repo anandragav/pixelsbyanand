@@ -17,41 +17,53 @@ const Gallery = ({ category }: GalleryProps) => {
   const { data: photos = [], isLoading, error } = useQuery({
     queryKey: ['photos', category],
     queryFn: async () => {
-      console.log('Fetching images with category:', category);
-      let query = supabase
-        .from('images')
-        .select('*, likes(count)')
-        .order('created_at', { ascending: false });
-      
-      if (category) {
-        query = query.eq('category', category);
-      }
-      
-      const { data, error } = await query;
-      
-      if (error) {
-        console.error('Error fetching images:', error);
-        toast.error('Failed to load images');
+      try {
+        console.log('Fetching images with category:', category);
+        let query = supabase
+          .from('images')
+          .select('*, likes(count)')
+          .order('created_at', { ascending: false });
+        
+        if (category) {
+          query = query.eq('category', category);
+        }
+        
+        const { data, error } = await query;
+        
+        if (error) {
+          console.error('Error fetching images:', error);
+          toast.error('Failed to load images');
+          throw error;
+        }
+
+        if (!data) {
+          console.log('No data returned from Supabase');
+          return [];
+        }
+
+        console.log('Raw data from Supabase:', data);
+        
+        const processedData = data.map(photo => ({
+          ...photo,
+          likes_count: photo.likes?.[0]?.count || 0
+        }));
+
+        console.log('Processed images:', processedData);
+        console.log('Total processed images:', processedData.length);
+        
+        return processedData;
+      } catch (error) {
+        console.error('Error in queryFn:', error);
         throw error;
       }
-
-      // Log the raw data to see what we're getting from Supabase
-      console.log('Raw data from Supabase:', data);
-      
-      const processedData = data.map(photo => ({
-        ...photo,
-        likes_count: photo.likes?.[0]?.count || 0
-      }));
-
-      // Log the processed data to verify transformation
-      console.log('Processed images:', processedData);
-      console.log('Total processed images:', processedData.length);
-      
-      return processedData;
-    }
+    },
+    retry: 2,
+    staleTime: 1000 * 60, // 1 minute
   });
 
   useEffect(() => {
+    if (!photos) return;
+    
     console.log('Current photos array:', photos);
     console.log('Number of photos:', photos.length);
     
