@@ -24,13 +24,21 @@ export const useImages = (category?: string) => {
         }
 
         if (!data) {
+          console.log('No data returned from query');
           return [];
         }
         
-        return data.map(photo => ({
+        console.log('Number of images fetched:', data.length);
+        console.log('Raw data from database:', data);
+        
+        const processedData = data.map(photo => ({
           ...photo,
           likes_count: photo.likes?.[0]?.count || 0
         }));
+
+        console.log('Processed data:', processedData);
+        
+        return processedData;
       } catch (error) {
         console.error('Error in queryFn:', error);
         throw error;
