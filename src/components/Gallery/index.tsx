@@ -21,7 +21,7 @@ const Gallery = ({ category }: GalleryProps) => {
       let query = supabase
         .from('images')
         .select('*, likes(count)')
-        .order('created_at', { ascending: false });  // Order by newest first
+        .order('created_at', { ascending: false });
       
       if (category) {
         query = query.eq('category', category);
@@ -35,16 +35,26 @@ const Gallery = ({ category }: GalleryProps) => {
         throw error;
       }
 
-      console.log('Total images fetched:', data?.length);
-      console.log('Fetched images:', data);
-      return data.map(photo => ({
+      // Log the raw data to see what we're getting from Supabase
+      console.log('Raw data from Supabase:', data);
+      
+      const processedData = data.map(photo => ({
         ...photo,
         likes_count: photo.likes?.[0]?.count || 0
       }));
+
+      // Log the processed data to verify transformation
+      console.log('Processed images:', processedData);
+      console.log('Total processed images:', processedData.length);
+      
+      return processedData;
     }
   });
 
   useEffect(() => {
+    console.log('Current photos array:', photos);
+    console.log('Number of photos:', photos.length);
+    
     const channel = supabase
       .channel('schema-db-changes')
       .on(
@@ -54,7 +64,8 @@ const Gallery = ({ category }: GalleryProps) => {
           schema: 'public',
           table: 'likes'
         },
-        () => {
+        (payload) => {
+          console.log('Received likes update:', payload);
           queryClient.invalidateQueries({ queryKey: ['photos', category] });
         }
       )
@@ -63,14 +74,16 @@ const Gallery = ({ category }: GalleryProps) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [queryClient, category]);
+  }, [queryClient, category, photos]);
 
   const handleLike = async (imageId: string) => {
+    console.log('Attempting to like image:', imageId);
     const { error } = await supabase
       .from('likes')
       .insert({ image_id: imageId });
 
     if (error) {
+      console.error('Error liking image:', error);
       toast.error('Failed to like image');
       return;
     }
@@ -80,7 +93,7 @@ const Gallery = ({ category }: GalleryProps) => {
 
   const handleImageClick = (columnIndex: number, imageIndex: number) => {
     const flatIndex = columnIndex + (imageIndex * 5);
-    console.log('Image clicked. Setting index to:', flatIndex);
+    console.log('Image clicked. Column index:', columnIndex, 'Image index:', imageIndex, 'Flat index:', flatIndex);
     console.log('Total images:', photos.length);
     setSelectedImageIndex(flatIndex);
   };
@@ -91,6 +104,7 @@ const Gallery = ({ category }: GalleryProps) => {
   };
 
   if (error) {
+    console.error('Gallery error:', error);
     return <div className="text-center py-8 text-foreground">Error loading images. Please try again.</div>;
   }
 
@@ -101,8 +115,13 @@ const Gallery = ({ category }: GalleryProps) => {
   // Split photos into 5 columns
   const columns = [[], [], [], [], []].map(() => [] as Image[]);
   photos.forEach((photo, index) => {
-    columns[index % 5].push(photo);
+    const columnIndex = index % 5;
+    console.log(`Adding photo ${index} to column ${columnIndex}:`, photo);
+    columns[columnIndex].push(photo);
   });
+
+  // Log the final column distribution
+  console.log('Column distribution:', columns.map(col => col.length));
 
   return (
     <>
