@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -13,11 +13,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Heart } from 'lucide-react';
-import type { Database } from '@/integrations/supabase/types';
-
-type Image = Database['public']['Tables']['images']['Row'] & {
-  likes_count?: number;
-};
+import type { Image } from '@/components/Gallery/types';
 
 interface ImageModalProps {
   images: Image[];
@@ -28,22 +24,15 @@ interface ImageModalProps {
 }
 
 const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: ImageModalProps) => {
-  useEffect(() => {
-    console.log('ImageModal rendered with:', {
-      isOpen,
-      selectedImageIndex,
-      totalImages: images.length
-    });
-  }, [isOpen, selectedImageIndex, images.length]);
-
-  const handleContextMenu = (e: React.MouseEvent) => {
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-  };
+  }, []);
 
-  const handleDragStart = (e: React.DragEvent) => {
+  const handleDragStart = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-  };
+  }, []);
 
+  // Only render the component when it's actually open
   if (!isOpen) return null;
 
   return (
@@ -66,7 +55,7 @@ const ImageModal = ({ images, selectedImageIndex, isOpen, onClose, onLike }: Ima
             }}
           >
             <CarouselContent>
-              {images.map((image, index) => (
+              {images.map((image) => (
                 <CarouselItem key={image.id}>
                   <div className="flex items-center justify-center p-4">
                     <div className="relative">

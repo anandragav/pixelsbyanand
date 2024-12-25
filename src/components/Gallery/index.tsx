@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from 'sonner';
@@ -54,49 +54,46 @@ const Gallery = ({ category }: GalleryProps) => {
     staleTime: 1000 * 60 // 1 minute
   });
 
+  // Set up realtime subscription
   useEffect(() => {
-    if (!photos) return;
-
-    // Clean up previous subscription if it exists
-    if (channelRef.current) {
-      supabase.removeChannel(channelRef.current);
-    }
-    
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'likes'
-        },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['photos', category] });
-        }
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('Successfully subscribed to likes changes');
-        }
-        if (status === 'CLOSED') {
-          console.log('Channel closed');
-        }
-        if (status === 'CHANNEL_ERROR') {
-          console.error('Channel error');
-        }
-      });
-
-    // Store the channel reference
-    channelRef.current = channel;
-
-    return () => {
+    const setupRealtimeSubscription = async () => {
+      // Clean up previous subscription if it exists
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+        await supabase.removeChannel(channelRef.current);
         channelRef.current = null;
       }
+
+      const channel = supabase
+        .channel('schema-db-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'likes'
+          },
+          () => {
+            queryClient.invalidateQueries({ queryKey: ['photos', category] });
+          }
+        )
+        .subscribe();
+
+      channelRef.current = channel;
     };
-  }, [queryClient, category, photos]);
+
+    setupRealtimeSubscription();
+
+    // Cleanup function
+    return () => {
+      const cleanup = async () => {
+        if (channelRef.current) {
+          await supabase.removeChannel(channelRef.current);
+          channelRef.current = null;
+        }
+      };
+      cleanup();
+    };
+  }, [queryClient, category]);
 
   const handleLike = async (imageId: string) => {
     try {
@@ -117,14 +114,14 @@ const Gallery = ({ category }: GalleryProps) => {
     }
   };
 
-  const handleImageClick = (columnIndex: number, imageIndex: number) => {
+  const handleImageClick = useCallback((columnIndex: number, imageIndex: number) => {
     const flatIndex = columnIndex + (imageIndex * 5);
     setSelectedImageIndex(flatIndex);
-  };
+  }, []);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setSelectedImageIndex(-1);
-  };
+  }, []);
 
   if (error) {
     console.error('Gallery error:', error);
