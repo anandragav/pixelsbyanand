@@ -27,6 +27,7 @@ const Gallery = ({ category }: GalleryProps) => {
   }, []);
 
   if (error) {
+    console.error('Gallery error:', error);
     return (
       <div className="text-center py-8 text-foreground">
         Error loading images. Please try refreshing the page.
@@ -38,12 +39,17 @@ const Gallery = ({ category }: GalleryProps) => {
     return <div className="text-center py-8 text-foreground">Loading...</div>;
   }
 
+  console.log('Total photos received:', photos.length);
+
   // Distribute images evenly across 5 columns
   const columns: Image[][] = [[], [], [], [], []];
   photos.forEach((photo, index) => {
     const columnIndex = index % 5;
+    console.log(`Adding photo ${index} to column ${columnIndex}`);
     columns[columnIndex].push(photo);
   });
+
+  console.log('Column distribution:', columns.map(col => col.length));
 
   return (
     <>
