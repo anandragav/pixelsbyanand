@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from 'sonner';
 import ImageModal from '../ImageModal';
 import GalleryGrid from './GalleryGrid';
 import type { Image } from './types';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 interface GalleryProps {
   category?: string;
@@ -13,6 +14,7 @@ interface GalleryProps {
 const Gallery = ({ category }: GalleryProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(-1);
   const queryClient = useQueryClient();
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
   const { data: photos = [], isLoading, error } = useQuery({
     queryKey: ['photos', category],
@@ -54,6 +56,11 @@ const Gallery = ({ category }: GalleryProps) => {
 
   useEffect(() => {
     if (!photos) return;
+
+    // Clean up previous subscription if it exists
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+    }
     
     const channel = supabase
       .channel('schema-db-changes')
@@ -64,14 +71,30 @@ const Gallery = ({ category }: GalleryProps) => {
           schema: 'public',
           table: 'likes'
         },
-        (payload) => {
+        () => {
           queryClient.invalidateQueries({ queryKey: ['photos', category] });
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('Successfully subscribed to likes changes');
+        }
+        if (status === 'CLOSED') {
+          console.log('Channel closed');
+        }
+        if (status === 'CHANNEL_ERROR') {
+          console.error('Channel error');
+        }
+      });
+
+    // Store the channel reference
+    channelRef.current = channel;
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
   }, [queryClient, category, photos]);
 
