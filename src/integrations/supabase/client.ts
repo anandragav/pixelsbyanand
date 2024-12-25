@@ -12,6 +12,19 @@ export const supabase = createClient<Database>(
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: true
+    },
+    realtime: {
+      params: {
+        eventsPerSecond: 10
+      }
+    },
+    db: {
+      schema: 'public'
+    },
+    global: {
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
     }
   }
 );

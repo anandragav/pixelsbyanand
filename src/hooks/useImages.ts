@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from "@/integrations/supabase/client";
 import type { Image } from '@/components/Gallery/types';
+import { toast } from 'sonner';
 
 export const useImages = (category?: string) => {
   return useQuery({
     queryKey: ['photos', category],
     queryFn: async () => {
       try {
+        console.log('Fetching images...');
         let query = supabase
           .from('images')
           .select('*, likes(count)')
@@ -19,7 +21,8 @@ export const useImages = (category?: string) => {
         const { data, error } = await query;
         
         if (error) {
-          console.error('Error fetching images:', error);
+          console.error('Supabase error:', error);
+          toast.error('Failed to fetch images');
           throw error;
         }
 
@@ -41,6 +44,7 @@ export const useImages = (category?: string) => {
         return processedData;
       } catch (error) {
         console.error('Error in queryFn:', error);
+        toast.error('Failed to load images');
         throw error;
       }
     },
