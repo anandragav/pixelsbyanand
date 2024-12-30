@@ -22,20 +22,29 @@ const Gallery = ({ category }: GalleryProps) => {
   const { data: photos = [], isLoading } = useQuery({
     queryKey: ['photos', category],
     queryFn: async () => {
+      console.log('Fetching images...');
       let query = supabase
         .from('images')
-        .select('*, likes(count)');
+        .select('*, likes(count)')
+        .order('created_at', { ascending: false });
       
       if (category) {
         query = query.eq('category', category);
       }
       
       const { data, error } = await query;
-      if (error) throw error;
-      return data.map(photo => ({
+      if (error) {
+        console.error('Error fetching images:', error);
+        throw error;
+      }
+      
+      console.log('Raw data from database:', data);
+      const processedData = data.map(photo => ({
         ...photo,
         likes_count: photo.likes?.[0]?.count || 0
       }));
+      console.log('Processed images:', processedData);
+      return processedData;
     }
   });
 
@@ -83,7 +92,7 @@ const Gallery = ({ category }: GalleryProps) => {
   };
 
   const handleImageClick = (columnIndex: number, imageIndex: number) => {
-    const flatIndex = columnIndex + (imageIndex * 5);
+    const flatIndex = columnIndex + (imageIndex * 4); // Changed from 5 to 4
     console.log('Image clicked. Setting index to:', flatIndex);
     console.log('Total images:', photos.length);
     setSelectedImageIndex(flatIndex);
@@ -98,17 +107,23 @@ const Gallery = ({ category }: GalleryProps) => {
     return <div className="text-center py-8 text-foreground">Loading...</div>;
   }
 
-  // Split photos into 5 columns instead of 4
-  const columns = [[], [], [], [], []].map(() => [] as Image[]);
+  console.log('Total photos to display:', photos.length);
+
+  // Split photos into 4 columns instead of 5
+  const columns = [[], [], [], []].map(() => [] as Image[]);
   
   photos.forEach((photo, index) => {
-    columns[index % 5].push(photo);
+    const columnIndex = index % 4; // Changed from 5 to 4
+    columns[columnIndex].push(photo);
+    console.log(`Adding photo ${index} to column ${columnIndex}`);
   });
+
+  console.log('Column distribution:', columns.map(col => col.length));
 
   return (
     <>
       <div 
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-[2000px] mx-auto px-4"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-[2000px] mx-auto px-4"
         onContextMenu={handleContextMenu}
       >
         {columns.map((column, columnIndex) => (
