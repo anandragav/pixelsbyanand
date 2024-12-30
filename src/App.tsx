@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import Contact from "./pages/Contact";
+import Nature from "./pages/Nature";
 import AdminCheck from "./components/AdminCheck";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             } 
           />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/nature" element={<Nature />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
