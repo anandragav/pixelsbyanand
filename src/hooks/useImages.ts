@@ -8,17 +8,11 @@ export const useImages = (category?: string) => {
     queryKey: ['photos', category],
     queryFn: async () => {
       try {
-        console.log('Fetching images...');
-        let query = supabase
+        console.log('Fetching images without category filter...');
+        const { data, error } = await supabase
           .from('images')
           .select('*, likes(count)')
           .order('created_at', { ascending: false });
-        
-        if (category) {
-          query = query.eq('category', category);
-        }
-        
-        const { data, error } = await query;
         
         if (error) {
           console.error('Supabase error:', error);
